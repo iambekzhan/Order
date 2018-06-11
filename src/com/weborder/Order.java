@@ -15,40 +15,57 @@ public class Order {
 		System.setProperty("webdriver.chrome.driver", "/Users/iambekzhan/Documents/Selenium/Drivers/chromedriver");
 		
 		WebDriver driver = new ChromeDriver();
+		
 		String url = "http://secure.smartbearsoftware.com/samples/TestComplete12/WebOrders/Login.aspx";
+		
 		String user = "Tester";
 		String password = "test";
+		
 		Random r = new Random();
-		int ran = r.nextInt(100);
-		int ranLet = r.nextInt(25);		
-		int zipCode = r.nextInt(99999) + 10000;
 		
-		String randomNumbers = "" + ran;
-		String capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String middle = "";
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < 1; i++) {
-            middle = middle + capitalLetters.charAt(ranLet);
+		// generating zip code from 01000 till 99999
+		int zipCode = r.nextInt(99999) + 1000;
+		String zip = "";
+		if(zipCode >= 10000) {
+			zip = zip + zipCode;
+		}else {
+			zip = "0" + zipCode;
 		}
-		String zip = "" + zipCode;
 		
+		// creating random numbers from 1 to 100 for quantity
+		int ran = r.nextInt(100)+1;
+		String randomNumbers = "" + ran;
+		
+		// pick random letters for middle name
+		int ranLet = r.nextInt(25);	
+		String capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String middle = "" + capitalLetters.charAt(ranLet);
+		
+		// take to the website
 		driver.get(url);
+		
+		// enter user name and password, then click Login button
 		driver.findElement(By.id("ctl00_MainContent_username")).sendKeys(user);
 		driver.findElement(By.id("ctl00_MainContent_password")).sendKeys(password);
 		driver.findElement(By.id("ctl00_MainContent_login_button")).click();
-		driver.findElement(By.linkText("Order")).click();
 		
+		// after entering to home page put Order button on the left side
+		driver.findElement(By.linkText("Order")).click();
+
+		// in Order page filling up product boxes
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtQuantity")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtQuantity")).sendKeys(Keys.BACK_SPACE);;
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtQuantity")).sendKeys(randomNumbers);
 		
+		// in Order page filling up address information
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtName")).sendKeys("John " + middle + " Smith");
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_TextBox2")).sendKeys("123 Any st");
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_TextBox3")).sendKeys("Anytown");
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_TextBox4")).sendKeys("Virginia");
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_TextBox5")).sendKeys(zip);
 		
+		// in Order page filling up payment information
 		for(int i = 0; i < 2; i++) {
 			int num = r.nextInt(2);
 			if(num == 0) {
@@ -69,8 +86,11 @@ public class Order {
 		}
 		
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_TextBox1")).sendKeys("03/21");
+		
+		// click on process button in order page
 		driver.findElement(By.id("ctl00_MainContent_fmwOrder_InsertButton")).click();
 		
+		// checking that order has been successfully added
 		String text = driver.findElement(By.xpath("//*[@id=\"ctl00_MainContent_fmwOrder\"]/tbody/tr/td/div/strong")).getText();
 		if(text.equals("New order has been successfully added.")) {
 			System.out.println("Your order succesfully added");
@@ -78,6 +98,7 @@ public class Order {
 			System.out.println("Your order didn't added");
 		}
 		
+		// after checking that order successfully added just quit browser
 		Thread.sleep(5000);
 		driver.quit();
 		
