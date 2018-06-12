@@ -33,7 +33,7 @@ public class Order {
 		}
 		
 		// creating random numbers from 1 to 100 for quantity
-		int ran = r.nextInt(100)+1;
+		int ran = r.nextInt(101)+1;
 		String randomNumbers = "" + ran;
 		
 		// pick random letters for middle name
@@ -67,7 +67,7 @@ public class Order {
 		
 		// in Order page filling up payment information
 		for(int i = 0; i < 2; i++) {
-			int num = r.nextInt(2);
+			int num = r.nextInt(3);
 			if(num == 0) {
 				driver.findElement(By.id("ctl00_MainContent_fmwOrder_cardList_0")).click();
 				driver.findElement(By.id("ctl00_MainContent_fmwOrder_TextBox6")).sendKeys("4" + r.nextInt(99999999) + "" + r.nextInt(9999999));
